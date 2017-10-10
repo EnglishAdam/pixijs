@@ -137,5 +137,5 @@
  *      PIXI.autoDetectRenderer(options) // will automatically detect which renderer you should be using. WebGL is the preferred renderer as it is a lot faster. If webGL is not supported by the browser then this function will return a canvas renderer.
  */
 
- // NOTES
- // Frame is like a view into a texture, else whole texture used
+// NOTES
+// Frame is like a view into a texture, else whole texture used
