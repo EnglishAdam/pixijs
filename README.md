@@ -1,5 +1,8 @@
 # pixijs
-This respository is for the development of PixiJS
+This respository is for the demonstration of PixiJS and development of PixiJS based projects, it contains the following:
+* '/examples' - Contains examples from the PixiJS site
+* '/games' - Contains created games
+* '/tutorial' - Contains tutorials elaborating on some points of PixiJS
 
 ## Installation
 PixiJS runs within the \<canvas\> tag of an html file. To view these on your desktop, you'll need to self host the files on an http server. An easy way to do this is to use 'http-server', installing it globally, then running it to host your PixiJS projects.

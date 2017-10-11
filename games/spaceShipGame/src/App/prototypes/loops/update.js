@@ -8,8 +8,8 @@ module.exports = function update(delta) {
     this.setEnemyPosition(delta);
 
     // Updated Instances
-    this.obj.background.update();
-    this.obj.player.update();
+    if (this.obj.background.update) this.obj.background.update();
+    if (this.obj.player.update) this.obj.player.update();
     this.obj.bullets.forEach((bullet) => {
         if (bullet && bullet.update) bullet.update(delta);
     });
