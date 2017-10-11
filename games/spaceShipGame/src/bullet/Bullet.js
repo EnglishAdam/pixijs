@@ -1,6 +1,11 @@
-function Bullet(app, texture, index, angle=0) {
+function Bullet(app, index, angle=0) {
+    // Extend Sprite Class
+    PIXI.Sprite.call(this, app.resources.bullet.texture);
+
+    // Reference Application
     this.app = app;
-    PIXI.Sprite.call(this, PIXI.Texture.fromImage(texture));
+
+    // Game Variables
     this.position.x = app.obj.player.position.x;
     this.position.y = app.obj.player.position.y;
     this.anchor.x = 0.5;
@@ -15,21 +20,14 @@ function Bullet(app, texture, index, angle=0) {
     this.life = 1
 }
 
+// Extend Sprite Class
 Bullet.prototype = Object.create(PIXI.Sprite.prototype);
 
-Bullet.prototype.update = function update() {
-    this.position.x += this.speed.x
-    this.position.y += this.speed.y
-    // this.position.x += this.app.speed.x
-    // this.position.y += this.app.speed.y
-    this.life -= 0.01
-    if (this.life < 0) this.destroy()
-}
+// Loops
+Bullet.prototype.update = require('./prototypes/loops/update')
 
-Bullet.prototype.destroy = function()
-{
-    this.app.obj.bullets[this.index] = null;
-    PIXI.Sprite.prototype.destroy.call(this);
-};
+// Life Cycle
+Bullet.prototype.destroy = require('./prototypes/life/destroy')
 
+// Export
 module.exports = Bullet

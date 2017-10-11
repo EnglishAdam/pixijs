@@ -1,18 +1,17 @@
-/**
- * Background
- * @class Background
- */
-function Background(app, texture) {
-    PIXI.extras.TilingSprite.call(this, PIXI.Texture.fromImage(texture), app.renderer.width, app.renderer.height);
+// Class Background
+function Background(app) {
+    // Extend TileingSprite Class
+    PIXI.extras.TilingSprite.call(this, app.resources.background.texture, app.renderer.width, app.renderer.height);
+    
+    // Reference Application
+    this.app = app;
 }
 
+// Extend TileingSprite Class
 Background.prototype = Object.create(PIXI.extras.TilingSprite.prototype);
 
-Background.prototype.update = function update(app) {
-    this.tilePosition.x += app.speed.x;
-    this.tilePosition.y += app.speed.y;
-}
+// Loops
+Background.prototype.update = require('./prototypes/loops/update')
 
-// Background.prototype.destroy = PIXI.Sprite.prototype.destroy.bind(this)
-
+// Export
 module.exports = Background

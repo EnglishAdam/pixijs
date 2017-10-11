@@ -1,6 +1,7 @@
-function Player(app, texture) {
-    console.log(texture)
-    PIXI.Sprite.call(this, PIXI.Texture.fromImage(texture));
+function Player(app) {
+    // Extend Sprite
+    PIXI.Sprite.call(this, app.resources.player.texture);
+    this.app = app;
     this.position.x = app.renderer.width/2;
     this.position.y = app.renderer.height/2;
     this.anchor.x = 0.5;
@@ -8,11 +9,7 @@ function Player(app, texture) {
 }
 
 Player.prototype = Object.create(PIXI.Sprite.prototype);
-
-Player.prototype.update = function update() {
-    // console.log(Player.prototype.destroy)
-}
-
-// Player.prototype.destroy = PIXI.Sprite.prototype.destroy.bind(this)
+Player.prototype.update = require('./prototype/update');
+Player.prototype.fire = require('./prototype/fire');
 
 module.exports = Player

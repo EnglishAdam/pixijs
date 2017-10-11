@@ -1,10 +1,11 @@
-const App = require('./src/APP.js');
+const App = require('./src/App/App.js');
 
 // When DOM ready
-function ready() {
+function loaded() {
+    console.log('loaded')
     // Start App
     var app = new App();
-    app.ready();
+    // app.ready();
 }
 
-document.addEventListener('DOMContentLoaded', ready, false);
+document.addEventListener('DOMContentLoaded', loaded, false);

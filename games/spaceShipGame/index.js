@@ -1,61 +1,61 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-const App = require('./src/APP.js');
+const App = require('./src/App/App.js');
 
 // When DOM ready
-function ready() {
+function loaded() {
+    console.log('loaded')
     // Start App
     var app = new App();
-    app.ready();
+    // app.ready();
 }
 
-document.addEventListener('DOMContentLoaded', ready, false);
-},{"./src/APP.js":2}],2:[function(require,module,exports){
-const Background = require('./background/Background')
-const Player = require('./player/Player')
-const Enemy = require('./enemy/Enemy')
-const Bullet = require('./bullet/Bullet')
-
-/**
- * Application call for simulation
- * @class App
- */
+document.addEventListener('DOMContentLoaded', loaded, false);
+},{"./src/App/App.js":2}],2:[function(require,module,exports){
+// Class App
 function App() {
-    this.options = {
+    // Extend Application Class
+    PIXI.Application.call(this, {
         width: 800,
         height: 600,
         backgroundColor: 0x1099bb
+    });
+
+    // Load Textures
+    PIXI.loader.add('background', './src/assets/background.png')
+    PIXI.loader.add('bullet', './src/assets/bullet.png')
+    PIXI.loader.add('enemy', './src/assets/enemy.png')
+    PIXI.loader.add('enemyHit', './src/assets/enemyHit.png')
+    PIXI.loader.add('player', './src/assets/player.png')
+    PIXI.loader.load((loader, resources) => {
+        this.resources = resources;
+        this.ready();
+    })
+
+    // Reference Classes
+    this.classes = {
+        Background: require('../background/Background'),
+        Bullet: require('../bullet/Bullet'),
+        Enemy: require('../enemy/Enemy'),
+        Player: require('../player/Player')
+
     }
-    this.app = new PIXI.Application(this.options);
+
+    // Object Instances
     this.obj = {
-        background: new Background(this.app, './src/assets/background.png'),
-        player: new Player(this.app, './src/assets/player.png'),
-        enemies: [
-            new Enemy(this.app, './src/assets/enemy.png'),
-            new Enemy(this.app, './src/assets/enemy.png'),
-            new Enemy(this.app, './src/assets/enemy.png'),
-            new Enemy(this.app, './src/assets/enemy.png'),
-            new Enemy(this.app, './src/assets/enemy.png')
-        ],
+        background: {},
+        player: {},
+        enemies: [],
         bullets: []
     }
-    this.speed = {
-        x: 0,
-        y: 0
-    }
+
+    // Game Variables
+    this.speed = { x: 0, y: 0 }
     this.speedMax = 10
     this.movementSpeed = 0.2
     this.movementDecay = 0.1
-
-    this.mapSize = {
-        x: 1000,
-        y: 1000
-    }
-
-    this.mapPosition = {
-        x: 0,
-        y: 0,
-    }
-
+    this.trueMapPosition = { x: 0, y: 0, }
+    this.mapPosition = { x: 0, y: 0, }
+    this.mapSize = { x: 1000, y: 1000 }
     this.ctrl = {
         a: false,
         d: false,
@@ -63,31 +63,130 @@ function App() {
         s: false,
         lmb: false
     }
-
     this.fireRate = 5
     this.fireRateCounter = 0
 
-    this.app.ticker.add((delta) => this.update(delta));
+    // Set Update Function
+    this.ticker.add((delta) => this.update(delta));
 }
 
-App.prototype.ready = function ready() {
-    document.body.appendChild(this.app.view);
-    this.addEventListeners()
+// Extend Application Class
+App.prototype = Object.create(PIXI.Application.prototype);
 
-    this.app.stage.addChild(
-        this.obj.background,
-        this.obj.player,
-        this.obj.enemies[0],
-        this.obj.enemies[1],
-        this.obj.enemies[2],
-        this.obj.enemies[3],
-        this.obj.enemies[4],
-    );
+// Setup
+App.prototype.ready = require('./prototypes/setup/ready');
 
+// Loop
+App.prototype.update = require('./prototypes/loops/update');
 
+// Events
+App.prototype.addEventListeners = require('./prototypes/events/addEventListeners');
+
+// Controls
+App.prototype.checkControls = require('./prototypes/controls/checkControls');
+App.prototype.lmbDown = require('./prototypes/controls/lmbDown');
+App.prototype.moveDown = require('./prototypes/controls/moveDown');
+App.prototype.moveLeft = require('./prototypes/controls/moveLeft');
+App.prototype.moveRight = require('./prototypes/controls/moveRight');
+App.prototype.moveUp = require('./prototypes/controls/moveUp');
+
+// Create
+App.prototype.createBackground = require('./prototypes/create/createBackground');
+App.prototype.createBullet = require('./prototypes/create/createBullet');
+App.prototype.createEnemy = require('./prototypes/create/createEnemy');
+App.prototype.createPlayer = require('./prototypes/create/createPlayer');
+
+// Game
+App.prototype.roundSpeedValue = require('./prototypes/game/roundSpeedValue');
+App.prototype.setEnemyPosition = require('./prototypes/game/setEnemyPosition');
+App.prototype.setMapPosition = require('./prototypes/game/setMapPosition');
+App.prototype.setMaxSpeed = require('./prototypes/game/setMaxSpeed');
+App.prototype.setMovementDecay = require('./prototypes/game/setMovementDecay');
+
+// Util
+App.prototype.getMousePos = require('./prototypes/utils/getMousePos');
+
+// Export
+module.exports = App
+},{"../background/Background":22,"../bullet/Bullet":24,"../enemy/Enemy":27,"../player/Player":28,"./prototypes/controls/checkControls":3,"./prototypes/controls/lmbDown":4,"./prototypes/controls/moveDown":5,"./prototypes/controls/moveLeft":6,"./prototypes/controls/moveRight":7,"./prototypes/controls/moveUp":8,"./prototypes/create/createBackground":9,"./prototypes/create/createBullet":10,"./prototypes/create/createEnemy":11,"./prototypes/create/createPlayer":12,"./prototypes/events/addEventListeners":13,"./prototypes/game/roundSpeedValue":14,"./prototypes/game/setEnemyPosition":15,"./prototypes/game/setMapPosition":16,"./prototypes/game/setMaxSpeed":17,"./prototypes/game/setMovementDecay":18,"./prototypes/loops/update":19,"./prototypes/setup/ready":20,"./prototypes/utils/getMousePos":21}],3:[function(require,module,exports){
+module.exports = function checkControls(delta) {
+    // Check Keys
+    if (this.ctrl.w && this.speed.y < this.speedMax) this.moveUp(delta);
+    if (this.ctrl.s && this.speed.y > -this.speedMax) this.moveDown(delta);
+    if (this.ctrl.a && this.speed.x < this.speedMax) this.moveLeft(delta);
+    if (this.ctrl.d && this.speed.x > -this.speedMax) this.moveRight(delta);
+
+    // Check Mouse
+    if (this.ctrl.lmb) {
+        if (this.fireRateCounter === this.fireRate) {
+            // this.obj.player.fire(delta);
+            this.lmbDown(delta);
+            this.fireRateCounter = 0;
+        } else {
+            this.fireRateCounter += 1;
+        }
+    };
 }
+},{}],4:[function(require,module,exports){
+module.exports = function lmbDown(delta) {
+    this.obj.player.fire(delta);
+}
+},{}],5:[function(require,module,exports){
+module.exports = function moveDown(delta) {
+    this.speed.y -= this.movementSpeed * delta;
+}
+},{}],6:[function(require,module,exports){
+module.exports = function moveLeft(delta) {
+    this.speed.x += this.movementSpeed * delta;
+}
+},{}],7:[function(require,module,exports){
+module.exports = function moveRight(delta) {
+    this.speed.x -= this.movementSpeed * delta;
+}
+},{}],8:[function(require,module,exports){
+module.exports = function moveUp(delta) {
+    this.speed.y += this.movementSpeed * delta;
+}
+},{}],9:[function(require,module,exports){
+module.exports = function createBackground() {
+    // Create Background
+    const background = new this.classes.Background(this)
+    this.obj.background = background
+    this.stage.addChild(background)
+}
+},{}],10:[function(require,module,exports){
+module.exports = function createBullet(playerPosition, moustPosition) {
+    // Get Deltas
+    const deltaY = moustPosition.y - playerPosition.y;
+    const deltaX = moustPosition.x - playerPosition.x;
 
-App.prototype.addEventListeners = function checkKeys() {
+    // Calculate Angle to Mouse Cursor
+    let angleRadians = Math.atan2(deltaY, deltaX);
+    angleRadians -= 0.5 * Math.PI
+    angleRadians *= -1
+
+    // Create Bullet
+    const index = this.obj.bullets.length
+    const bullet = new this.classes.Bullet(this, index, angleRadians)
+    this.obj.bullets.push(bullet)
+    this.stage.addChild(bullet)
+}
+},{}],11:[function(require,module,exports){
+module.exports = function createEnemy() {
+    // Create Enemy
+    const enemy = new this.classes.Enemy(this)
+    this.obj.enemies.push(enemy)
+    this.stage.addChild(enemy)
+}
+},{}],12:[function(require,module,exports){
+module.exports = function createPlayer() {
+    // Create Player
+    const player = new this.classes.Player(this)
+    this.obj.player = player
+    this.stage.addChild(player)
+}
+},{}],13:[function(require,module,exports){
+module.exports = function addEventListeners() {
     document.addEventListener('keydown', (event) => {
         this.ctrl[event.key] = true;
     }, false);
@@ -104,96 +203,111 @@ App.prototype.addEventListeners = function checkKeys() {
         this.ctrl.lmb = false;
     }, false);
 }
-
-App.prototype.fire = function fire(delta) {
-    let p1 = this.obj.player.position
-    let p2 = this.app.renderer.plugins.interaction.mouse.global
-    let angleRadians = Math.atan2(p2.y - p1.y, p2.x - p1.x);
-    angleRadians -= 0.5 * Math.PI
-    angleRadians *= -1
-    // console.log('angleRadians', angleRadians)
-    let index = this.obj.bullets.length
-    let bullet = new Bullet(this, './src/assets/bullet.png', index, angleRadians)
-    this.obj.bullets.push(bullet)
-    this.app.stage.addChild(bullet)
-}
-
-App.prototype.update = function update(delta) {
-    // this.checkKeys();
-    console.log('this.speed')
-
-    if (this.ctrl.w && this.speed.y < this.speedMax) this.speed.y += this.movementSpeed * delta;
-    if (this.ctrl.s && this.speed.y > -this.speedMax) this.speed.y -= this.movementSpeed * delta;
-    if (this.ctrl.a && this.speed.x < this.speedMax) this.speed.x += this.movementSpeed * delta;
-    if (this.ctrl.d && this.speed.x > -this.speedMax) this.speed.x -= this.movementSpeed * delta;
-    if (this.ctrl.lmb) {
-        if (this.fireRateCounter === this.fireRate) {
-            this.fire(delta);
-            this.fireRateCounter = 0;
-        } else {
-            this.fireRateCounter += 1;
-        }
-        
-    };
-
-    if (this.speed.x > this.speedMax) this.speed.x = this.speedMax;
-    else if (this.speed.x < -this.speedMax) this.speed.x = -this.speedMax;
-    if (this.speed.y > this.speedMax) this.speed.y = this.speedMax;
-    else if (this.speed.y < -this.speedMax) this.speed.y = -this.speedMax;
-
-    if (this.speed.x > 0) this.speed.x -= this.movementDecay;
-    else if (this.speed.x < 0) this.speed.x += this.movementDecay;
-    if (this.speed.y > 0) this.speed.y -= this.movementDecay;
-    else if (this.speed.y < 0) this.speed.y += this.movementDecay;
-
+},{}],14:[function(require,module,exports){
+module.exports = function roundSpeedValue(delta) {
     this.speed.x = Math.round(this.speed.x * 100) / 100;
     this.speed.y = Math.round(this.speed.y * 100) / 100;
-
-    this.obj.background.update(this);
-    this.obj.player.update();
-    this.obj.bullets.forEach((bullet) => {
-        if (bullet && bullet.update) bullet.update();
-    });
-
-    // Move Tile
-    // this.obj.background.tilePosition.x += this.speed.x;
-    // this.obj.background.tilePosition.y += this.speed.y;
-    
-    // Map Position
+}
+},{}],15:[function(require,module,exports){
+module.exports = function setEnemyPosition(delta) {
+    this.obj.enemies.forEach((enemy) => {
+        enemy.position.x = (this.trueMapPosition.x + enemy.randomPosition.x) % this.mapSize.x;
+        enemy.position.y = (this.trueMapPosition.y + enemy.randomPosition.y) % this.mapSize.y;
+    })
+}
+},{}],16:[function(require,module,exports){
+module.exports = function setMapPosition(delta) {
     this.mapPosition.x += this.speed.x;
     this.mapPosition.y += this.speed.y;
-
     if (this.mapPosition.x > this.mapSize.x) this.mapPosition.x = -this.mapSize.x + (this.mapPosition.x - this.mapSize.x)
     if (this.mapPosition.x < -this.mapSize.x) this.mapPosition.x = this.mapSize.x + (this.mapPosition.x + this.mapSize.x)
     if (this.mapPosition.y > this.mapSize.y) this.mapPosition.y = -this.mapSize.y + (this.mapPosition.y - this.mapSize.y)
     if (this.mapPosition.y < -this.mapSize.y) this.mapPosition.y = this.mapSize.y + (this.mapPosition.y + this.mapSize.y)
-    console.log('a', this.mapPosition.x, this.mapPosition.y)
+    this.trueMapPosition.x = this.mapSize.x + this.mapPosition.x
+    this.trueMapPosition.y = this.mapSize.y + this.mapPosition.y
+}
+},{}],17:[function(require,module,exports){
+module.exports = function setMaxSpeed(delta) {
+    if (this.speed.x > this.speedMax) this.speed.x = this.speedMax;
+    else if (this.speed.x < -this.speedMax) this.speed.x = -this.speedMax;
+    if (this.speed.y > this.speedMax) this.speed.y = this.speedMax;
+    else if (this.speed.y < -this.speedMax) this.speed.y = -this.speedMax;
+}
+},{}],18:[function(require,module,exports){
+module.exports = function setMovementDecay(delta) {
+    if (this.speed.x > 0) this.speed.x -= this.movementDecay;
+    else if (this.speed.x < 0) this.speed.x += this.movementDecay;
+    if (this.speed.y > 0) this.speed.y -= this.movementDecay;
+    else if (this.speed.y < 0) this.speed.y += this.movementDecay;
+}
+},{}],19:[function(require,module,exports){
+module.exports = function update(delta) {
+    // Checks & Sets
+    this.checkControls(delta);
+    this.setMaxSpeed(delta);
+    this.setMovementDecay(delta);
+    this.roundSpeedValue(delta);
+    this.setMapPosition(delta);
+    this.setEnemyPosition(delta);
+
+    // Updated Instances
+    this.obj.background.update();
+    this.obj.player.update();
+    this.obj.bullets.forEach((bullet) => {
+        if (bullet && bullet.update) bullet.update(delta);
+    });
+    this.obj.enemies.forEach((enemy) => {
+        if (enemy && enemy.update) enemy.update(delta);
+    });
+}
+},{}],20:[function(require,module,exports){
+module.exports = function ready() {
+    document.body.appendChild(this.view);
+    this.createBackground();
+    this.createPlayer();
+    this.createEnemy();
+    this.createEnemy();
+    this.createEnemy();
+    this.createEnemy();
+    this.createEnemy();
+    this.addEventListeners()
+}
+},{}],21:[function(require,module,exports){
+module.exports = function getMousePos() {
+    return this.renderer.plugins.interaction.mouse.global;
+}
+},{}],22:[function(require,module,exports){
+// Class Background
+function Background(app) {
+    // Extend TileingSprite Class
+    PIXI.extras.TilingSprite.call(this, app.resources.background.texture, app.renderer.width, app.renderer.height);
+    
+    // Reference Application
+    this.app = app;
 }
 
-module.exports = App
-},{"./background/Background":3,"./bullet/Bullet":4,"./enemy/Enemy":5,"./player/Player":6}],3:[function(require,module,exports){
-/**
- * Background
- * @class Background
- */
-function Background(app, texture) {
-    PIXI.extras.TilingSprite.call(this, PIXI.Texture.fromImage(texture), app.renderer.width, app.renderer.height);
-}
-
+// Extend TileingSprite Class
 Background.prototype = Object.create(PIXI.extras.TilingSprite.prototype);
 
-Background.prototype.update = function update(app) {
-    this.tilePosition.x += app.speed.x;
-    this.tilePosition.y += app.speed.y;
-}
+// Loops
+Background.prototype.update = require('./prototypes/loops/update')
 
-// Background.prototype.destroy = PIXI.Sprite.prototype.destroy.bind(this)
-
+// Export
 module.exports = Background
-},{}],4:[function(require,module,exports){
-function Bullet(app, texture, index, angle=0) {
+},{"./prototypes/loops/update":23}],23:[function(require,module,exports){
+module.exports = function update(delta) {
+    this.tilePosition.x += this.app.speed.x;
+    this.tilePosition.y += this.app.speed.y;
+}
+},{}],24:[function(require,module,exports){
+function Bullet(app, index, angle=0) {
+    // Extend Sprite Class
+    PIXI.Sprite.call(this, app.resources.bullet.texture);
+
+    // Reference Application
     this.app = app;
-    PIXI.Sprite.call(this, PIXI.Texture.fromImage(texture));
+
+    // Game Variables
     this.position.x = app.obj.player.position.x;
     this.position.y = app.obj.player.position.y;
     this.anchor.x = 0.5;
@@ -208,30 +322,39 @@ function Bullet(app, texture, index, angle=0) {
     this.life = 1
 }
 
+// Extend Sprite Class
 Bullet.prototype = Object.create(PIXI.Sprite.prototype);
 
-Bullet.prototype.update = function update() {
-    this.position.x += this.speed.x
-    this.position.y += this.speed.y
-    // this.position.x += this.app.speed.x
-    // this.position.y += this.app.speed.y
-    this.life -= 0.01
-    if (this.life < 0) this.destroy()
-}
+// Loops
+Bullet.prototype.update = require('./prototypes/loops/update')
 
-Bullet.prototype.destroy = function()
-{
+// Life Cycle
+Bullet.prototype.destroy = require('./prototypes/life/destroy')
+
+// Export
+module.exports = Bullet
+},{"./prototypes/life/destroy":25,"./prototypes/loops/update":26}],25:[function(require,module,exports){
+module.exports = function destroy() {
     this.app.obj.bullets[this.index] = null;
     PIXI.Sprite.prototype.destroy.call(this);
 };
-
-module.exports = Bullet
-},{}],5:[function(require,module,exports){
-function Enemy(app, texture) {
-    console.log(texture)
-    PIXI.Sprite.call(this, PIXI.Texture.fromImage(texture));
-    this.position.x = app.renderer.width/2;
-    this.position.y = app.renderer.height/2;
+},{}],26:[function(require,module,exports){
+module.exports = function update(delta) {
+    this.position.x += this.speed.x
+    this.position.y += this.speed.y
+    this.life -= 0.01
+    if (this.life < 0) this.destroy()
+}
+},{}],27:[function(require,module,exports){
+function Enemy(app) {
+    this.app = app;
+    PIXI.Sprite.call(this, app.resources.enemy.texture);
+    this.position.x = app.renderer.width / 2;
+    this.position.y = app.renderer.height / 2;
+    this.randomPosition = {
+        x: Math.round(Math.random() * 2000),
+        y: Math.round(Math.random() * 2000)
+    }
     this.anchor.x = 0.5;
     this.anchor.y = 0.5;
 }
@@ -239,16 +362,32 @@ function Enemy(app, texture) {
 Enemy.prototype = Object.create(PIXI.Sprite.prototype);
 
 Enemy.prototype.update = function update() {
-    // console.log(Enemy.prototype.destroy)
+}
+
+Enemy.prototype.damage = function damage() {
+    this.texture = app.resources.enemy.texture
+    setTimeout(() => {
+        this.texture = app.resources.enemyHit.texture
+    }, 1000);
+}
+
+Enemy.prototype.reposition = function reposition() {
+    this.position.x = this.app.renderer.width / 2;
+    this.position.y = this.app.renderer.height / 2;
+}
+
+Enemy.prototype.destroy = function destroy() {
+
 }
 
 // Enemy.prototype.destroy = PIXI.Sprite.prototype.destroy.bind(this)
 
 module.exports = Enemy
-},{}],6:[function(require,module,exports){
-function Player(app, texture) {
-    console.log(texture)
-    PIXI.Sprite.call(this, PIXI.Texture.fromImage(texture));
+},{}],28:[function(require,module,exports){
+function Player(app) {
+    // Extend Sprite
+    PIXI.Sprite.call(this, app.resources.player.texture);
+    this.app = app;
     this.position.x = app.renderer.width/2;
     this.position.y = app.renderer.height/2;
     this.anchor.x = 0.5;
@@ -256,12 +395,21 @@ function Player(app, texture) {
 }
 
 Player.prototype = Object.create(PIXI.Sprite.prototype);
-
-Player.prototype.update = function update() {
-    // console.log(Player.prototype.destroy)
-}
-
-// Player.prototype.destroy = PIXI.Sprite.prototype.destroy.bind(this)
+Player.prototype.update = require('./prototype/update');
+Player.prototype.fire = require('./prototype/fire');
 
 module.exports = Player
+},{"./prototype/fire":29,"./prototype/update":30}],29:[function(require,module,exports){
+module.exports = function fire() {
+    // Get Positions
+    const playerPosition = this.position;
+    const mousePosition = this.app.getMousePos();
+
+    // Create Bullet
+    this.app.createBullet(playerPosition, mousePosition)
+}
+},{}],30:[function(require,module,exports){
+module.exports = function update(delta) {
+    //
+}
 },{}]},{},[1]);
