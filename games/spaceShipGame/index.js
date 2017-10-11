@@ -108,7 +108,7 @@ App.prototype.getMousePos = require('./prototypes/utils/getMousePos');
 
 // Export
 module.exports = App
-},{"../background/Background":22,"../bullet/Bullet":24,"../enemy/Enemy":27,"../player/Player":28,"./prototypes/controls/checkControls":3,"./prototypes/controls/lmbDown":4,"./prototypes/controls/moveDown":5,"./prototypes/controls/moveLeft":6,"./prototypes/controls/moveRight":7,"./prototypes/controls/moveUp":8,"./prototypes/create/createBackground":9,"./prototypes/create/createBullet":10,"./prototypes/create/createEnemy":11,"./prototypes/create/createPlayer":12,"./prototypes/events/addEventListeners":13,"./prototypes/game/roundSpeedValue":14,"./prototypes/game/setEnemyPosition":15,"./prototypes/game/setMapPosition":16,"./prototypes/game/setMaxSpeed":17,"./prototypes/game/setMovementDecay":18,"./prototypes/loops/update":19,"./prototypes/setup/ready":20,"./prototypes/utils/getMousePos":21}],3:[function(require,module,exports){
+},{"../background/Background":22,"../bullet/Bullet":24,"../enemy/Enemy":27,"../player/Player":32,"./prototypes/controls/checkControls":3,"./prototypes/controls/lmbDown":4,"./prototypes/controls/moveDown":5,"./prototypes/controls/moveLeft":6,"./prototypes/controls/moveRight":7,"./prototypes/controls/moveUp":8,"./prototypes/create/createBackground":9,"./prototypes/create/createBullet":10,"./prototypes/create/createEnemy":11,"./prototypes/create/createPlayer":12,"./prototypes/events/addEventListeners":13,"./prototypes/game/roundSpeedValue":14,"./prototypes/game/setEnemyPosition":15,"./prototypes/game/setMapPosition":16,"./prototypes/game/setMaxSpeed":17,"./prototypes/game/setMovementDecay":18,"./prototypes/loops/update":19,"./prototypes/setup/ready":20,"./prototypes/utils/getMousePos":21}],3:[function(require,module,exports){
 module.exports = function checkControls(delta) {
     // Check Keys
     if (this.ctrl.w && this.speed.y < this.speedMax) this.moveUp(delta);
@@ -300,6 +300,7 @@ module.exports = function update(delta) {
     this.tilePosition.y += this.app.speed.y;
 }
 },{}],24:[function(require,module,exports){
+// Class Bullet
 function Bullet(app, index, angle=0) {
     // Extend Sprite Class
     PIXI.Sprite.call(this, app.resources.bullet.texture);
@@ -346,9 +347,15 @@ module.exports = function update(delta) {
     if (this.life < 0) this.destroy()
 }
 },{}],27:[function(require,module,exports){
+// Class Enemy
 function Enemy(app) {
-    this.app = app;
+    // Extend Sprite Class
     PIXI.Sprite.call(this, app.resources.enemy.texture);
+    
+    // Reference Application
+    this.app = app;
+
+    // Game Variables
     this.position.x = app.renderer.width / 2;
     this.position.y = app.renderer.height / 2;
     this.randomPosition = {
@@ -359,47 +366,70 @@ function Enemy(app) {
     this.anchor.y = 0.5;
 }
 
+// Extend Sprite Class
 Enemy.prototype = Object.create(PIXI.Sprite.prototype);
 
-Enemy.prototype.update = function update() {
-}
+// Loops
+Enemy.prototype.update = require('./prototypes/loops/update')
 
-Enemy.prototype.damage = function damage() {
+// Events
+Enemy.prototype.onDamage = require('./prototypes/events/onDamage')
+
+// Utils
+Enemy.prototype.reposition = require('./prototypes/utils/reposition')
+
+// Life Cycle
+Enemy.prototype.destroy = require('./prototypes/life/destroy')
+
+// Export
+module.exports = Enemy
+},{"./prototypes/events/onDamage":28,"./prototypes/life/destroy":29,"./prototypes/loops/update":30,"./prototypes/utils/reposition":31}],28:[function(require,module,exports){
+module.exports = function onDamage() {
     this.texture = app.resources.enemy.texture
     setTimeout(() => {
         this.texture = app.resources.enemyHit.texture
     }, 1000);
 }
-
-Enemy.prototype.reposition = function reposition() {
+},{}],29:[function(require,module,exports){
+module.exports = function destroy() {
+    PIXI.Sprite.prototype.destroy.bind(this);
+    }
+},{}],30:[function(require,module,exports){
+module.exports = function update() {
+}
+},{}],31:[function(require,module,exports){
+module.exports = function reposition() {
     this.position.x = this.app.renderer.width / 2;
     this.position.y = this.app.renderer.height / 2;
 }
-
-Enemy.prototype.destroy = function destroy() {
-
-}
-
-// Enemy.prototype.destroy = PIXI.Sprite.prototype.destroy.bind(this)
-
-module.exports = Enemy
-},{}],28:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
+// Class Player
 function Player(app) {
-    // Extend Sprite
+    // Extend Spite Class
     PIXI.Sprite.call(this, app.resources.player.texture);
+
+    // Reference Application
     this.app = app;
+
+    // Game Variables
     this.position.x = app.renderer.width/2;
     this.position.y = app.renderer.height/2;
     this.anchor.x = 0.5;
     this.anchor.y = 0.5;
 }
 
+// Extend Spite Class
 Player.prototype = Object.create(PIXI.Sprite.prototype);
-Player.prototype.update = require('./prototype/update');
-Player.prototype.fire = require('./prototype/fire');
 
+// Loops
+Player.prototype.update = require('./prototype/loops/update');
+
+// Events
+Player.prototype.fire = require('./prototype/events/fire');
+
+// Export
 module.exports = Player
-},{"./prototype/fire":29,"./prototype/update":30}],29:[function(require,module,exports){
+},{"./prototype/events/fire":33,"./prototype/loops/update":34}],33:[function(require,module,exports){
 module.exports = function fire() {
     // Get Positions
     const playerPosition = this.position;
@@ -408,7 +438,7 @@ module.exports = function fire() {
     // Create Bullet
     this.app.createBullet(playerPosition, mousePosition)
 }
-},{}],30:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 module.exports = function update(delta) {
     //
 }

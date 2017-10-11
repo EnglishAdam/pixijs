@@ -1,3 +1,4 @@
+// Class Bullet
 function Bullet(app, index, angle=0) {
     // Extend Sprite Class
     PIXI.Sprite.call(this, app.resources.bullet.texture);
