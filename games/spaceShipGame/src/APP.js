@@ -1,5 +1,6 @@
 const Background = require('./background/Background')
 const Player = require('./player/Player')
+const Enemy = require('./enemy/Enemy')
 const Bullet = require('./bullet/Bullet')
 
 /**
@@ -16,6 +17,13 @@ function App() {
     this.obj = {
         background: new Background(this.app, './src/assets/background.png'),
         player: new Player(this.app, './src/assets/player.png'),
+        enemies: [
+            new Enemy(this.app, './src/assets/enemy.png'),
+            new Enemy(this.app, './src/assets/enemy.png'),
+            new Enemy(this.app, './src/assets/enemy.png'),
+            new Enemy(this.app, './src/assets/enemy.png'),
+            new Enemy(this.app, './src/assets/enemy.png')
+        ],
         bullets: []
     }
     this.speed = {
@@ -25,6 +33,16 @@ function App() {
     this.speedMax = 10
     this.movementSpeed = 0.2
     this.movementDecay = 0.1
+
+    this.mapSize = {
+        x: 1000,
+        y: 1000
+    }
+
+    this.mapPosition = {
+        x: 0,
+        y: 0,
+    }
 
     this.ctrl = {
         a: false,
@@ -47,6 +65,11 @@ App.prototype.ready = function ready() {
     this.app.stage.addChild(
         this.obj.background,
         this.obj.player,
+        this.obj.enemies[0],
+        this.obj.enemies[1],
+        this.obj.enemies[2],
+        this.obj.enemies[3],
+        this.obj.enemies[4],
     );
 
 
@@ -76,7 +99,7 @@ App.prototype.fire = function fire(delta) {
     let angleRadians = Math.atan2(p2.y - p1.y, p2.x - p1.x);
     angleRadians -= 0.5 * Math.PI
     angleRadians *= -1
-    console.log('angleRadians', angleRadians)
+    // console.log('angleRadians', angleRadians)
     let index = this.obj.bullets.length
     let bullet = new Bullet(this, './src/assets/bullet.png', index, angleRadians)
     this.obj.bullets.push(bullet)
@@ -85,7 +108,7 @@ App.prototype.fire = function fire(delta) {
 
 App.prototype.update = function update(delta) {
     // this.checkKeys();
-    // console.log(this.speed)
+    console.log('this.speed')
 
     if (this.ctrl.w && this.speed.y < this.speedMax) this.speed.y += this.movementSpeed * delta;
     if (this.ctrl.s && this.speed.y > -this.speedMax) this.speed.y -= this.movementSpeed * delta;
@@ -114,14 +137,25 @@ App.prototype.update = function update(delta) {
     this.speed.x = Math.round(this.speed.x * 100) / 100;
     this.speed.y = Math.round(this.speed.y * 100) / 100;
 
-    this.obj.background.update();
+    this.obj.background.update(this);
     this.obj.player.update();
     this.obj.bullets.forEach((bullet) => {
         if (bullet && bullet.update) bullet.update();
     });
 
-    this.obj.background.tilePosition.x += this.speed.x;
-    this.obj.background.tilePosition.y += this.speed.y;
+    // Move Tile
+    // this.obj.background.tilePosition.x += this.speed.x;
+    // this.obj.background.tilePosition.y += this.speed.y;
+    
+    // Map Position
+    this.mapPosition.x += this.speed.x;
+    this.mapPosition.y += this.speed.y;
+
+    if (this.mapPosition.x > this.mapSize.x) this.mapPosition.x = -this.mapSize.x + (this.mapPosition.x - this.mapSize.x)
+    if (this.mapPosition.x < -this.mapSize.x) this.mapPosition.x = this.mapSize.x + (this.mapPosition.x + this.mapSize.x)
+    if (this.mapPosition.y > this.mapSize.y) this.mapPosition.y = -this.mapSize.y + (this.mapPosition.y - this.mapSize.y)
+    if (this.mapPosition.y < -this.mapSize.y) this.mapPosition.y = this.mapSize.y + (this.mapPosition.y + this.mapSize.y)
+    console.log('a', this.mapPosition.x, this.mapPosition.y)
 }
 
 module.exports = App
