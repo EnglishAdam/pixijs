@@ -12,5 +12,5 @@ module.exports = function createBullet(playerPosition, moustPosition) {
     const index = this.obj.bullets.length
     const bullet = new this.classes.Bullet(this, index, angleRadians)
     this.obj.bullets.push(bullet)
-    this.stage.addChild(bullet)
+    this.layers.bullet.addChild(bullet)
 }

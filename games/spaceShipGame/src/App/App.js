@@ -13,8 +13,12 @@ function App() {
     PIXI.loader.add('enemy', './src/assets/enemy.png')
     PIXI.loader.add('enemyHit', './src/assets/enemyHit.png')
     PIXI.loader.add('player', './src/assets/player.png')
+    PIXI.loader.add('bulletShadow', './src/assets/bulletShadow.png')
+    PIXI.loader.add('enemyShadow', './src/assets/enemyShadow.png')
+    PIXI.loader.add('playerShadow', './src/assets/playerShadow.png')
     PIXI.loader.load((loader, resources) => {
         this.resources = resources;
+        this.addLayers();
         this.ready();
     })
 
@@ -25,6 +29,17 @@ function App() {
         Enemy: require('../enemy/Enemy'),
         Player: require('../player/Player')
 
+    }
+
+    // Layers
+    this.layers = {
+        background: new PIXI.Container(),
+        shadow: new PIXI.Container(),
+        expBottom: new PIXI.Container(),
+        enemy: new PIXI.Container(),
+        player: new PIXI.Container(),
+        bullet: new PIXI.Container(),
+        expTop: new PIXI.Container()
     }
 
     // Object Instances
@@ -62,6 +77,7 @@ App.prototype = Object.create(PIXI.Application.prototype);
 
 // Setup
 App.prototype.ready = require('./prototypes/setup/ready');
+App.prototype.addLayers = require('./prototypes/setup/addLayers');
 
 // Loop
 App.prototype.update = require('./prototypes/loops/update');
