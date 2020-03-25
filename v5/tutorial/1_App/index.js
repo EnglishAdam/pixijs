@@ -27,10 +27,11 @@ document.body.appendChild(app.view);
  *           height,                 // number               // default - 600        // optional - the height of the renderers view
  *           view,                   // HTMLCanvasElement    // default -            // optional - the canvas to use as a view, optional
  *           transparent,            // boolean              // default - false      // optional - If the render view is transparent, default false
- *           antialia,               // boolean              // default - false      // optional - sets antialias (only applicable in chrome at the moment
+ *           autoDensity,            // boolean              // default - false      // optional - Resizes renderer view in CSS pixels to allow for resolutions other than 1.
+ *           antialias,              // boolean              // default - false      // optional - sets antialias (only applicable in chrome at the moment
  *           preserveDrawingBuffer,  // boolean              // default - false      // optional - enables drawing buffer preservation, enable this if you need to call toDataUrl on the webgl context
  *           resolution,             // number               // default - 1          // optional - The resolution / device pixel ratio of the renderer, retina would be 2
- *           forceCanvas,            // boolean              // default - false      // optional - prevents selection of WebGL renderer, even if such is present
+ *           forceCanvas,            // boolean              // default - false      // optional - prevents selection of WebGL renderer, even if such is present, this option only is available when using pixi.js-legacy or @pixi/canvas-renderer modules, otherwise it is ignored.
  *           backgroundColor,        // number               // default - 0x000000   // optional - The background color of the rendered area (shown if not transparent).
  *           clearBeforeRender,      // boolean              // default - true       // optional - This sets if the renderer will clear the canvas or not before the new render pass.
  *           roundPixels,            // boolean              // default - false      // optional - If true PixiJS will Math.floor() x/y values when rendering, stopping pixel interpolation.
@@ -39,22 +40,28 @@ document.body.appendChild(app.view);
  *           powerPreference,        // string               // default -            // optional - Parameter passed to webgl context, set to "high-performance" for devices with dual graphics card webgl only
  *           sharedTicker,           // boolean              // default - false      // optional - true to use PIXI.ticker.shared, false to create new ticker.
  *           sharedLoader            // boolean              // default - false      // optional - true to use PIXI.loaders.shared, false to create new Loader.
+ * 
  *      })
  * 
  * 
  * -- PROPERTIES
  *      app._options // Default Options
- *      app.loader   // (PIXI.loaders.Loader) - Loader instance to help with asset loading.
- *      app.render   // (PIXI.WebGLRenderer | PIXI.CanvasRenderer) - WebGL renderer if available, otherwise CanvasRenderer
- *      app.screen   // (PIXI.Rectangle) - Reference to the renderer's screen rectangle. Its safe to use as filterArea or hitArea for whole screen
- *      app.stage    // (PIXI.Container) - The root display container that's rendered.
- *      app.ticker   // (PIXI.ticker.Ticker) - Ticker for doing render updates.
- *      app.view     // (HTMLCanvasElement) - Reference to the renderer's canvas element.
+ *      app.loader   // (PIXI.Loader)                               - readoly - Loader instance to help with asset loading.
+ *      app.render   // (PIXI.Renderer | PIXI.CanvasRenderer)                 - WebGL renderer if available, otherwise CanvasRenderer
+ *      app.resizeTo // (Window | HTMLElement)                                - WebGL renderer if available, otherwise CanvasRenderer
+ *      app.screen   // (PIXI.Rectangle)                            - readoly - Reference to the renderer's screen rectangle. Its safe to use as filterArea or hitArea for whole screen
+ *      app.stage    // (PIXI.Container)                                      - The root display container that's rendered.
+ *      app.ticker   // (PIXI.Ticker)                                         - Ticker for doing render updates.
+ *      app.view     // (HTMLCanvasElement)                         - readoly - Reference to the renderer's canvas element.
  * 
  * -- METHODS
- *      app.destroy(removeView)  // Destroy and don't use after this.
+ *      PIXI.Application.registerPlugin({
+ *        plugin // (PIXI.Application.Plugin) - Plugin to be installed
+ *      })
+ *      app.destroy({removeView})  // Destroy and don't use after this.
  *           - removeView  // boolean  // default - false  // optional - Automatically remove canvas from DOM.
  *      app.render()             // Render the current stage.
  *      app.start()              // Convenience method for starting the render.
  *      app.stop()               // Convenience method for stopping the render.
+ * -- TYPE FEINITIONS
  */
