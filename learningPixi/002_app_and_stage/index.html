@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Hello World</title>
+  <script src="https://pixijs.download/v4.8.9/pixi.min.js"></script>
+</head>
+<body>
+  <script type="text/javascript">
+    // Display connsole greeting
+    let type = "WebGL"
+    if (!PIXI.utils.isWebGLSupported()) type = "canvas"
+    PIXI.utils.sayHello(type)
+  </script>
+</body>
+</html>
