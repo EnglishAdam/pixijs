@@ -27,7 +27,7 @@
  *      // SHAPES
  *          [x] PIXI.Circle(_x, _y, _radius)                        // The Circle object is used to help draw graphics and can also be used to specify a hit area for displayObjects.
  *          [x] PIXI.Ellipse(_x, _y, _halfWidth, _halfHeight)       // The Ellipse object is used to help draw graphics and can also be used to specify a hit area for displayObjects.
- *          [x] PIXI.ObservablePoint(cb, scope, x, y)               // The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis. An observable point is a point that triggers a callback when the point's position is changed.
+ *          [x] PIXI.ObservablePoint(cb, scope, _x, _y)             // The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis. An observable point is a point that triggers a callback when the point's position is changed.
  *          [x] PIXI.Point(x, y)                                    // The Point object represents a location in a two-dimensional coordinate system, where x represents the horizontal axis and y represents the vertical axis.
  *          [x] PIXI.Polygon(pointsArray)                           //
  *          [x] PIXI.Rectangle(x, y, width, height)                 // Rectangle object is an area defined by its position, as indicated by its top-left corner point (x, y) and by its width and its height.
@@ -36,13 +36,13 @@
  *      // UTILITY
  *          [x] PIXI.Buffer(data, _static, _index)  // A wrapper for data so that it can be used and uploaded by WebGL
  *          [x] PIXI.CountLimiter(maxItemsPerFrame)          // CountLimiter limits the number of items handled by a PIXI.BasePrepare to a specified number of items per frame.
- *          [x] PIXI.Matrix(a, b, c, d, tx, ty)     // The PixiJS Matrix class as an object, which makes it a lot faster, here is a representation of it : | a | b | tx| | c | d | ty| | 0 | 0 | 1 |
+ *          [x] PIXI.Matrix(_a, _b, _c, _d, _tx, _ty)     // The PixiJS Matrix class as an object, which makes it a lot faster, here is a representation of it : | a | b | tx| | c | d | ty| | 0 | 0 | 1 |
  *          [x] PIXI.TimeLimiter(maxMilliseconds)   // TimeLimiter limits the number of items handled by a PIXI.BasePrepare to a specified number of milliseconds per frame.
  * 
  *      // OBJECTS
  *          [x] PIXI.Container()        // A Container represents a collection of display objects. It is the base class of all display objects that act as a container for other objects.
  *          [x] PIXI.DisplayObject()    // The base class for all objects that are rendered on the screen. This is an abstract class and should not be used on its own rather it should be extended.
- *          [x] PIXI.ObjectRenderer()   // Base for a common object renderer that can be used as a system renderer plugin.
+ *          [x] PIXI.ObjectRenderer(renderer)   // Base for a common object renderer that can be used as a system renderer plugin.
  * 
  *      // SPRITE
  *          [x] PIXI.Sprite(texture)                                    // The Sprite object is the base for all textured objects that are rendered to the screen
@@ -128,23 +128,27 @@
  *      // BUFFER & TEXTURE
  *      [/] new PIXI.Framebuffer(width, height)    // Frame buffer used by the BaseRenderTexture
  * 
- *      // Model
+ *      // Model/GEOMETRY
  *      [/] new PIXI.Geometry(_buffers, _attributes)   // The Geometry represents a model. It consists of two components: GeometryStyle(The structure of the model such as the attributes layout), GeometryData(the data of the model - this consists of buffers. This can include anything from positions, uvs, normals, colors etc.). Geometry can be defined without passing in a style or data if required (thats how I prefer!)
  *      
  *      // WEBGL
  *      [/] new PIXI.GLProgram(program, uniformData)    // Helper class to create a WebGL Program
  *      [/] new PIXI.GLTexture()    // Internal texture for WebGL context
  * 
- *      [ ] new PIXI.MaskData()   // 
- *      [x] new PIXI.Matrix()   // 
- *      [ ] new PIXI.Mesh()   // 
- *      [ ] new PIXI.MeshBatchUvs()   // 
- *      [ ] new PIXI.MeshGeometry()   // 
- *      [ ] new PIXI.MeshMaterial()   // 
- *      [ ] new PIXI.NineSlicePlane()   // 
- *      [x] new PIXI.ObjectRenderer()   // 
- *      [x] new PIXI.ObservablePoint()    // 
- *      [ ] new PIXI.ParticleContainer()    // 
+ *      // MASK
+ *      [/] new PIXI.MaskData(_maskObject)   // Component for masked elements. Holds mask mode and temporary data about current mask
+ * 
+ *      // MESH
+ *      [/] new PIXI.Mesh(geometry, shader, _state, _drawMode)   // Base mesh class. Provides max flexibility to render any kind of WebGL visual.
+ *      [/] new PIXI.MeshBatchUvs(uvBuffer, uvMatrix)   // Class controls cache for UV mapping from Texture normal space to BaseTexture normal space.
+ *      [/] new PIXI.MeshGeometry(vertices, uvs, index)   // ???.
+ *      [/] new PIXI.MeshMaterial(uSampler, _options)   // Slightly opinionated default shader for PixiJS 2D objects.
+ * 
+ *      // SPITE
+ *      [/] new PIXI.NineSlicePlane(texture, _leftWidth, _topHeight, _rightWidth, _bottomHeight)   // The NineSlicePlane allows you to stretch a texture using 9-slice scaling. The corners will remain unscaled (useful for buttons with rounded corners for example) and the other areas will be scaled horizontally and or vertically.
+ *      
+*       // PARTICLE & CONTAINER & OBJECT
+ *      [/] new PIXI.ParticleContainer(_maxSize, _properties, _batchSize, _autoResize)    // The ParticleContainer class is a really fast version of the Container built solely for speed, so use when you need a lot of sprites or particles.The tradeoff of the ParticleContainer is that most advanced functionality will not work. ParticleContainer implements the basic object transform (position, scale, rotation) and some advanced functionality like tint (as of v4.5.6). Other more advanced functionality like masking, children, filters, etc will not work on sprites in this batch.
  *      [ ] new PIXI.ParticleRenderer()   // 
  *      [x] new PIXI.Point()    // 
  *      [x] new PIXI.Polygon()    // 
