@@ -191,26 +191,103 @@
  *          .ENV.AUTO                           // number // Garbage collection will happen periodically automatically
  *          .ENV.MANUAL                         // number // Garbage collection will need to be called manually
  * 
- *
- *      PIXI.GC_MODES               //
- *      PIXI.loader                 //
- *      PIXI.MIPMAP_TEXTURES        //
- *      PIXI.PRECISION              //
- *      PIXI.RENDERER_TYPE          //
- *      PIXI.RESOLUTION             //
- *      PIXI.RETINA_PREFIX          //
- *      PIXI.SCALE_MODES            //
- *      PIXI.SHAPES                 //
- *      PIXI.SPRITE_BATCH_SIZE      //
- *      PIXI.SPRITE_MAX_TEXTURES    //
- *      PIXI.SVG_SIZE               //
- *      PIXI.TARGET_FPMS            //
- *      PIXI.TEXT_GRADIENT          //
- *      PIXI.TRANSFORM_MODE         //
- *      PIXI.UPDATE_PRIORITY        //
- *      PIXI.VERSION                //
- *      PIXI.WRAP_MODES             //
+ *      // Graphics curves resolution settings. If adaptive flag is set to true, the resolution is calculated based on the curve's length to ensure better visual quality. Adaptive draw works with bezierCurveTo and quadraticCurveTo.
+ *      PIXI.GRAPHICS_CURVES  
+ *          .GRAPHICS_CURVES.adaptive           // boolean  // default - false  // flag indicating if the resolution should be adaptive
+ *          .GRAPHICS_CURVES.maxLength          // number   // default - 10     // maximal length of a single segment of the curve (if adaptive = false, ignored)
+ *          .GRAPHICS_CURVES.minSegments        // number   // default - 8      // minimal number of segments in the curve (if adaptive = false, ignored)
+ *          .GRAPHICS_CURVES.maxSegments        // number   // default - 2048   // maximal number of segments in the curve (if adaptive = false, ignored)
  * 
+ *      // Constants for mask implementations. We use type suffix because it leads to very different behaviours
+ *      PIXI.MASK_TYPES  
+ *          .MASK_TYPES.NONE                    // number // Mask is ignored
+ *          .MASK_TYPES.SCISSOR                 // number // Scissor mask, rectangle on screen, cheap
+ *          .MASK_TYPES.STENCIL                 // number // Stencil mask, 1-bit, medium, works only if renderer supports stencil
+ *          .MASK_TYPES.SPRITE                  // number // Mask that uses SpriteMaskFilter, uses temporary RenderTexture
+ * 
+ *      // Mipmap filtering modes that are supported by pixi.
+ *      // The PIXI.settings.MIPMAP_TEXTURES affects default texture filtering. Mipmaps are generated for a baseTexture if its mipmap field is ON, or its POW2 and texture dimensions are powers of 2. Due to platform restriction, ON option will work like POW2 for webgl-1.
+ *      // This property only affects WebGL.
+ *      PIXI.MIPMAP_MODES 
+ *          .MIPMAP_MODES.OFF                   // number // No mipmaps
+ *          .MIPMAP_MODES.POW2                  // number // Generate mipmaps if texture dimensions are pow2
+ *          .MIPMAP_MODES.	                    // number // Always generate mipmaps
+ *      
+ *      PIXI.PI_2                   // Two Pi.
+ *
+ *      // Constants that specify float precision in shaders.
+ *      PIXI.PRECISION  
+ *          .PRECISION.LOW                      // number // default - 'lowp'
+ *          .PRECISION.MEDIUM                   // number // default - 'mediump'
+ *          .PRECISION.HIGH                     // number // default - 'highp'
+ *
+ *      PIXI.RAD_TO_DEG             // Conversion factor for converting radians to degrees.
+ * 
+ *      // Constant to identify the Renderer Type.
+ *      PIXI.RENDERER_TYPE  
+ *          .RENDERER_TYPE.UNKNOWN              // number // Unknown render type.
+ *          .RENDERER_TYPE.WEBGL                // number // WebGL render type.
+ *          .RENDERER_TYPE.CANVAS               // number // Canvas render type.
+ * 
+ *      // The scale modes that are supported by pixi.
+ *      // The PIXI.settings.SCALE_MODE scale mode affects the default scaling mode of future operations. It can be re-assigned to either LINEAR or NEAREST, depending upon suitability.
+ *      PIXI.SCALE_MODES
+ *          .SCALE_MODES.LINEAR                 // number // Smooth scaling.
+ *          .SCALE_MODES.NEAREST                // number // 	Pixelating scaling.
+ *
+ *      // Constants that identify shapes, mainly to prevent instanceof calls.
+ *      PIXI.SHAPES
+ *          .SHAPES.POLY                        // number // Polygon.
+ *          .SHAPES.RECT                        // number // Rectangle.
+ *          .SHAPES.CIRC                        // number // Circle.
+ *          .SHAPES.ELIP                        // number // Ellipse.
+ *          .SHAPES.RREC                        // number // Rounded Rectangle.
+ *
+ *      // Various GL target types.
+ *      PIXI.TARGETS
+ *          .TARGETS.TEXTURE_2D                   // number // default - 3553
+ *          .TARGETS.TEXTURE_CUBE_MAP             // number // default - 34067
+ *          .TARGETS.TEXTURE_2D_ARRAY             // number // default - 35866
+ *          .TARGETS.TEXTURE_CUBE_MAP_POSITIVE_X  // number // default - 34069
+ *          .TARGETS.TEXTURE_CUBE_MAP_NEGATIVE_X  // number // default - 34070
+ *          .TARGETS.TEXTURE_CUBE_MAP_POSITIVE_Y  // number // default - 34071
+ *          .TARGETS.TEXTURE_CUBE_MAP_NEGATIVE_Y  // number // default - 34072
+ *          .TARGETS.TEXTURE_CUBE_MAP_POSITIVE_Z  // number // default - 34073
+ *          .TARGETS.TEXTURE_CUBE_MAP_NEGATIVE_Z  // number // default - 34074
+ *
+ *      // Constants that define the type of gradient on text.
+ *      PIXI.TEXT_GRADIENT
+ *          .TEXT_GRADIENT.LINEAR_VERTICAL        // number // Vertical gradient.
+ *          .TEXT_GRADIENT.LINEAR_HORIZONTAL      // number // Linear gradient.
+ *
+ *      // Various GL data format types.
+ *      PIXI.TYPES
+ *          .TYPES.UNSIGNED_BYTE                  // number // default - 5121
+ *          .TYPES.UNSIGNED_SHORT                 // number // default - 5123
+ *          .TYPES.UNSIGNED_SHORT_5_6_5           // number // default - 33635
+ *          .TYPES.UNSIGNED_SHORT_4_4_4_4         // number // default - 32819
+ *          .TYPES.UNSIGNED_SHORT_5_5_5_1         // number // default - 32820
+ *          .TYPES.FLOAT                          // number // default - 5126
+ *          .TYPES.HALF_FLOAT                     // number // default - 36193
+ * 
+ *      // Represents the update priorities used by internal PIXI classes when registered with the PIXI.Ticker object. Higher priority items are updated first and lower priority items, such as render, should go later.
+ *      PIXI.UPDATE_PRIORITY
+ *          .UPDATE_PRIORITY.INTERACTION          // number // default - 50  // Highest priority, used for PIXI.interaction.InteractionManager.
+ *          .UPDATE_PRIORITY.HIGH                 // number // default - 25  // High priority updating, PIXI.VideoBaseTexture and PIXI.AnimatedSprite.
+ *          .UPDATE_PRIORITY.NORMAL               // number // default - 0  // Default priority for ticker events, see PIXI.Ticker#add.
+ *          .UPDATE_PRIORITY.LOW                  // number // default - -25  // Low priority used for PIXI.Application rendering.
+ *          .UPDATE_PRIORITY.UTILITY              // number // default - -50  // Lowest priority used for PIXI.prepare.BasePrepare utility.
+ *
+ *      PIXI.VERSION                // String of the current PIXI version.
+ * 
+ *      // The wrap modes that are supported by pixi.
+ *      // The PIXI.settings.WRAP_MODE wrap mode affects the default wrapping mode of future operations. It can be re-assigned to either CLAMP or REPEAT, depending upon suitability. If the texture is non power of two then clamp will be used regardless as WebGL can only use REPEAT if the texture is po2.
+ *      // This property only affects WebGL.
+ *      PIXI.WRAP_MODES
+ *          .WRAP_MODES.CLAMP                     // number // The textures uvs are clamped.
+ *          .WRAP_MODES.REPEAT                    // number // The texture uvs tile and repeat.
+ *          .WRAP_MODES.MIRRORED_REPEAT           // number // The texture uvs tile and repeat with mirroring.
+ *
  * -- METHODS
  *      PIXI.autoDetectRenderer(options) // will automatically detect which renderer you should be using. WebGL is the preferred renderer as it is a lot faster. If webGL is not supported by the browser then this function will return a canvas renderer.
  */
