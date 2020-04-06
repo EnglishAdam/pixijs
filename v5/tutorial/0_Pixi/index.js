@@ -257,26 +257,26 @@
  *
  *      // Constants that define the type of gradient on text.
  *      PIXI.TEXT_GRADIENT
- *          .TEXT_GRADIENT.LINEAR_VERTICAL        // number // Vertical gradient.
- *          .TEXT_GRADIENT.LINEAR_HORIZONTAL      // number // Linear gradient.
+ *          .TEXT_GRADIENT.LINEAR_VERTICAL      // number // Vertical gradient.
+ *          .TEXT_GRADIENT.LINEAR_HORIZONTAL    // number // Linear gradient.
  *
  *      // Various GL data format types.
  *      PIXI.TYPES
- *          .TYPES.UNSIGNED_BYTE                  // number // default - 5121
- *          .TYPES.UNSIGNED_SHORT                 // number // default - 5123
- *          .TYPES.UNSIGNED_SHORT_5_6_5           // number // default - 33635
- *          .TYPES.UNSIGNED_SHORT_4_4_4_4         // number // default - 32819
- *          .TYPES.UNSIGNED_SHORT_5_5_5_1         // number // default - 32820
- *          .TYPES.FLOAT                          // number // default - 5126
- *          .TYPES.HALF_FLOAT                     // number // default - 36193
+ *          .TYPES.UNSIGNED_BYTE                // number // default - 5121
+ *          .TYPES.UNSIGNED_SHORT               // number // default - 5123
+ *          .TYPES.UNSIGNED_SHORT_5_6_5         // number // default - 33635
+ *          .TYPES.UNSIGNED_SHORT_4_4_4_4       // number // default - 32819
+ *          .TYPES.UNSIGNED_SHORT_5_5_5_1       // number // default - 32820
+ *          .TYPES.FLOAT                        // number // default - 5126
+ *          .TYPES.HALF_FLOAT                   // number // default - 36193
  * 
  *      // Represents the update priorities used by internal PIXI classes when registered with the PIXI.Ticker object. Higher priority items are updated first and lower priority items, such as render, should go later.
  *      PIXI.UPDATE_PRIORITY
- *          .UPDATE_PRIORITY.INTERACTION          // number // default - 50  // Highest priority, used for PIXI.interaction.InteractionManager.
- *          .UPDATE_PRIORITY.HIGH                 // number // default - 25  // High priority updating, PIXI.VideoBaseTexture and PIXI.AnimatedSprite.
- *          .UPDATE_PRIORITY.NORMAL               // number // default - 0  // Default priority for ticker events, see PIXI.Ticker#add.
- *          .UPDATE_PRIORITY.LOW                  // number // default - -25  // Low priority used for PIXI.Application rendering.
- *          .UPDATE_PRIORITY.UTILITY              // number // default - -50  // Lowest priority used for PIXI.prepare.BasePrepare utility.
+ *          .UPDATE_PRIORITY.INTERACTION        // number // default - 50  // Highest priority, used for PIXI.interaction.InteractionManager.
+ *          .UPDATE_PRIORITY.HIGH               // number // default - 25  // High priority updating, PIXI.VideoBaseTexture and PIXI.AnimatedSprite.
+ *          .UPDATE_PRIORITY.NORMAL             // number // default - 0  // Default priority for ticker events, see PIXI.Ticker#add.
+ *          .UPDATE_PRIORITY.LOW                // number // default - -25  // Low priority used for PIXI.Application rendering.
+ *          .UPDATE_PRIORITY.UTILITY            // number // default - -50  // Lowest priority used for PIXI.prepare.BasePrepare utility.
  *
  *      PIXI.VERSION                // String of the current PIXI version.
  * 
@@ -284,12 +284,39 @@
  *      // The PIXI.settings.WRAP_MODE wrap mode affects the default wrapping mode of future operations. It can be re-assigned to either CLAMP or REPEAT, depending upon suitability. If the texture is non power of two then clamp will be used regardless as WebGL can only use REPEAT if the texture is po2.
  *      // This property only affects WebGL.
  *      PIXI.WRAP_MODES
- *          .WRAP_MODES.CLAMP                     // number // The textures uvs are clamped.
- *          .WRAP_MODES.REPEAT                    // number // The texture uvs tile and repeat.
- *          .WRAP_MODES.MIRRORED_REPEAT           // number // The texture uvs tile and repeat with mirroring.
+ *          .WRAP_MODES.CLAMP                   // number // The textures uvs are clamped.
+ *          .WRAP_MODES.REPEAT                  // number // The texture uvs tile and repeat.
+ *          .WRAP_MODES.MIRRORED_REPEAT         // number // The texture uvs tile and repeat with mirroring.
  *
  * -- METHODS
  *      PIXI.autoDetectRenderer(options) // will automatically detect which renderer you should be using. WebGL is the preferred renderer as it is a lot faster. If webGL is not supported by the browser then this function will return a canvas renderer.
+ *      PIXI.useDeprecated() // Deprecations (backward compatibilities) are automatically applied for browser bundles in the UMD module format. If using Webpack or Rollup, you'll need to apply these deprecations manually.
+ *
+ * -- TYPE DEFINITIONS
+ *      PIXI.GD8Symmetry          // PIXI.groupD8
+ *      PIXI.ICanvasImageSource   // Types that can be passed to drawImage
+ * 
+ *      // A number, or a string containing a number.
+ *      PIXI.IFontMetrics
+ *          .IFontMetrics.ascent                // number // Font ascent
+ *          .IFontMetrics.descent               // number // Font descent
+ *          .IFontMetrics.fontSize              // number // Font size
+ * 
+ *      // Plugin to be installed for handling specific Loader resources.
+ *      PIXI.ILoaderPlugin
+ *          .ILoaderPlugin.add                  // function                     // arguments optional - Function to call immediate after registering plugin.
+ *          .ILoaderPlugin.pre                  // PIXI.Loader.loaderMiddleware // arguments optional - Middleware function to run before load, the arguments for this are (resource, next)
+ *          .ILoaderPlugin.use                  // PIXI.Loader.loaderMiddleware // arguments optional - Middleware function to run after load, the arguments for this are (resource, next)
+ * 
+ *      // Various GL data format types.
+ *      PIXI.ISize 
+ *          .ISize.width                        // number // Width component
+ *          .ISize.height                       // number // Height component
+ * 
+ * -- INTERFACE DEFINITIONS
+ *      PIXI.IHitArea                           // PIXI.Circle | PIXI.Ellipse | PIXI.Polygon | PIXI.RoundedRectange // Interface for classes that represent a hit area.
+ *      PIXI.IPoint                             // Common interface for points. Both Point and ObservablePoint implement it
+ * 
  */
 
 // NOTES
