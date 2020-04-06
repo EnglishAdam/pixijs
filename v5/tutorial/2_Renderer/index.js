@@ -1,10 +1,4 @@
-/**
- * Returns Pixi Application
- * 
- * The application will create a renderer using WebGL, if possible,
- * with a fallback to a canvas render. It will also setup the ticker
- * and the root stage PIXI.Container.
- */
+// Create application
 const app = new PIXI.Application({ 
   width: 256,         // default: 800
   height: 256,        // default: 600
@@ -13,19 +7,26 @@ const app = new PIXI.Application({
   resolution: 1       // default: 1
 });
 
-/**
- * Attached <canvas> to body.
- * 
- * app.view provides the HTMLCanvasElement to attach to
- * The application will create a canvas element for you that you
- * can then insert into the DOM.
-*/
+// Updated renderer - e.g. Set background and size
+app.renderer.backgroundColor = 0x061639;
+app.renderer.view.style.position = "absolute";
+app.renderer.view.style.display = "block";
+app.renderer.autoResize = true;
+app.renderer.resize(window.innerWidth, window.innerHeight);
+
+// Attach to DOM
 document.body.appendChild(app.view);
 
 /**
+ * -- DESCRIPTION
+ *    The Renderer draws the scene and all its content onto a WebGL enabled canvas.
+ *    This renderer should be used for browsers that support WebGL.
+ *    This renderer works by automatically managing WebGLBatchesm, so no need for Sprite Batches or Sprite Clouds.
+ *    Don't forget to add the view to your DOM or you will not see anything!
+ * 
  * -- USES
- *      PIXI.Application({options})
- *      const app = new PIXI.Application({options})
+ *      PIXI.Renderer ({options})
+ *      const app = new PIXI.Renderer ({options})
  * 
  * -- OPTIONS
  *      PIXI.Application({

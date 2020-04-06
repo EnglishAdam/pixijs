@@ -93,27 +93,105 @@
  *          PIXI.WebGLRenderer(options) //
  *          PIXI.WebGLState(gl)         // WebGL state machine
  * 
- * -- NAMESPACES
+ * -- NAMESPACES*
  *      PIXI.accessibility  // Contains a renderer plugin for interaction accessibility for end-users with physical impairments which require screen-renders, keyboard navigation, etc.
- *      PIXI.extract        // Provides renderer-specific plugins for exporting content from a renderer. For instance, these plugins can be used for saving an Image, Canvas element or for exporting the raw image data (pixels)
- *      PIXI.extras         // Additional PIXI DisplayObjects for animation, tiling and bitmap text.
- *      PIXI.filters        // Contains WebGL-only display filters that can be applied to DisplayObjects using the filters property.
- *      PIXI.interaction    // Contains a renderer plugin for handling mouse, pointer, and touch events.
- *      PIXI.loaders        // Contains APIs which extends the resource-loader module for loading assets, data, and other resources dynamically.
- *      PIXI.mesh           // 
- *      PIXI.particles      // 
- *      PIXI.prepare        // Provides renderer-specific plugins for pre-rendering DisplayObjects. These plugins are useful for asynchronously preparing assets, textures, graphics waiting to be displayed.
+ *      PIXI.canvasUtil     // Utility methods for Sprite/Texture tinting.
+ *      PIXI.filters        // Contains WebGL-only display filters that can be applied to DisplayObjects using the filters property. Can be extended
+ *      PIXI.graphicsUtils  // Generalized convenience utilities for Graphics.
+ *      PIXI.groupD8        // Implements the dihedral group D8, which is similar to group D4; D8 is the same but with diagonals, and it is used for texture rotations.
+ *      PIXI.interaction    // Contains a renderer plugin for handling mouse, pointer, and touch events. - Do not instantiate this plugin directly. It is available from the renderer.plugins property. See PIXI.CanvasRenderer#plugins or PIXI.Renderer#plugins.
+ *      PIXI.resources      // Collection of base resource types supported by PixiJS. - Resources are used by PIXI.BaseTexture to handle different media types such as images, video, SVG graphics, etc. In most use-cases, you should not instantiate the resources directly. The easy thing is to use PIXI.BaseTexture.from.
  *      PIXI.settings       // User's customizable globals for overriding the default PIXI settings, such as a renderer's default resolution, framerate, float percision, etc.
- *      PIXI.ticker         // Contains an API for interacting with PIXI's internal global update loop.
+ *      PIXI.systems        // Systems are individual components to the Renderer pipeline.
  *      PIXI.utils          // Generalized convenience utilities for PIXI.
+ *      
  * 
- * -- PROPERTIES
- *      PIXI.BLEND_MODES            //
- *      PIXI.CAN_UPLOAD_SAME_BUFFER //
- *      PIXI.DATA_URI               //
- *      PIXI.DEFAULT_RENDER_OPTIONS //
- *      PIXI.DRAW_MODES             //
- *      PIXI.FILTER_RESOLUTION      //
+ * -- PROPERTIES (all static, some constant)
+ *      // How to treat textures with premultiplied alpha
+ *      PIXI.ALPHA_MODES                            
+ *          .ALPHA_MODES.NO_PREMULTIPLIED_ALPHA // number // Source is not premultiplied, leave it like that. Option for compressed and data textures that are created from typed arrays.
+ *          .ALPHA_MODES.PREMULTIPLY_ON_UPLOAD  // number // Source is not premultiplied, premultiply on upload. Default option, used for all loaded images.
+ *          .ALPHA_MODES.PREMULTIPLIED_ALPHA    // number // Source is already premultiplied Example: spine atlases with _pma suffix.
+ *          .ALPHA_MODES.NPM                    // number // Alias for NO_PREMULTIPLIED_ALPHA.
+ *          .ALPHA_MODES.UNPACK                 // number // Default option, alias for PREMULTIPLY_ON_UPLOAD.
+ *          .ALPHA_MODES.PMA                    // number // Alias for PREMULTIPLIED_ALPHA.
+ *
+ *      // Various blend modes supported by PIXI.
+ *      // IMPORTANT - The WebGL renderer only supports the NORMAL, ADD, MULTIPLY and SCREEN blend modes. Anything else will silently act like NORMAL.
+ *      PIXI.BLEND_MODES  
+ *          .BLEND_MODES.NORMAL                 // number
+ *          .BLEND_MODES.ADD                    // number	
+ *          .BLEND_MODES.MULTIPLY               // number	
+ *          .BLEND_MODES.SCREEN                 // number	
+ *          .BLEND_MODES.OVERLAY                // number	
+ *          .BLEND_MODES.DARKEN                 // number	
+ *          .BLEND_MODES.LIGHTEN                // number	
+ *          .BLEND_MODES.COLOR_DODGE            // number	
+ *          .BLEND_MODES.COLOR_BURN             // number	
+ *          .BLEND_MODES.HARD_LIGHT             // number	
+ *          .BLEND_MODES.SOFT_LIGHT             // number	
+ *          .BLEND_MODES.DIFFERENCE             // number	
+ *          .BLEND_MODES.EXCLUSION              // number	
+ *          .BLEND_MODES.HUE                    // number	
+ *          .BLEND_MODES.SATURATION             // number	
+ *          .BLEND_MODES.COLOR                  // number	
+ *          .BLEND_MODES.LUMINOSITY             // number	
+ *          .BLEND_MODES.NORMAL_NPM             // number	
+ *          .BLEND_MODES.ADD_NPM                // number	
+ *          .BLEND_MODES.SCREEN_NPM             // number	
+ *          .BLEND_MODES.NONE                   // number	
+ *          .BLEND_MODES.SRC_IN                 // number	
+ *          .BLEND_MODES.SRC_OUT                // number	
+ *          .BLEND_MODES.SRC_ATOP               // number	
+ *          .BLEND_MODES.DST_OVER               // number	
+ *          .BLEND_MODES.DST_IN                 // number	
+ *          .BLEND_MODES.DST_OUT                // number	
+ *          .BLEND_MODES.DST_ATOP               // number	
+ *          .BLEND_MODES.SUBTRACT               // number	
+ *          .BLEND_MODES.SRC_OVER               // number	
+ *          .BLEND_MODES.ERASE                  // number	
+ *          .BLEND_MODES.XOR                    // number    
+ *
+ *      PIXI.DATA_URI               // Regexp for data URI. Based on: https://github.com/ragingwind/data-uri-regex
+ *      PIXI.defaultFilterVertex    // Default filter vertex shader
+ *      PIXI.defaultVertex          // Default vertex shader
+ *      PIXI.DEG_TO_RAD             // Conversion factor for converting degrees to radians.
+ * 
+ *      // Various webgl draw modes. These can be used to specify which GL drawMode to use under certain situations and renderers.
+ *      PIXI.DRAW_MODES
+ *          .DRAW_MODES.POINTS                  // number
+ *          .DRAW_MODES.LINES                   // number
+ *          .DRAW_MODES.LINE_LOOP               // number
+ *          .DRAW_MODES.LINE_STRIP              // number
+ *          .DRAW_MODES.TRIANGLES               // number
+ *          .DRAW_MODES.TRIANGLE_STRIP          // number
+ *          .DRAW_MODES.TRIANGLE_FAN            // number
+ *          .DRAW_MODES.POINTS                  // number
+ *
+ *      // Various GL texture/resources formats.
+ *      PIXI.ENV
+ *          .ENV.WEBGL_LEGACY                   // number // Used for older v1 WebGL devices. PixiJS will aim to ensure compatibility with older / less advanced devices. If you experience unexplained flickering prefer this environment.
+ *          .ENV.WEBGL                          // number // Version 1 of WebGL
+ *          .ENV.WEBGL2                         // number // Version 2 of WebGL
+ * 
+ *      // Various GL texture/resources formats.
+ *      PIXI.FORMATS 
+ *          .FORMATS.RGBA                       // number // default - 6408
+ *          .FORMATS.RGB                        // number // default - 6407
+ *          .FORMATS.ALPHA                      // number // default - 6406
+ *          .FORMATS.LUMINANCE                  // number // default - 6409
+ *          .FORMATS.LUMINANCE_ALPHA            // number // default - 6410
+ *          .FORMATS.DEPTH_COMPONENT            // number // default - 6402
+ *          .FORMATS.DEPTH_STENCIL              // number // default - 34041
+ * 
+ *      // The gc modes that are supported by pixi.
+ *      // The PIXI.settings.GC_MODE Garbage Collection mode for PixiJS textures is AUTO If set to GC_MODE, the renderer will occasionally check textures usage. If they are not used for a specified period of time they will be removed from the GPU. They will of course be uploaded again when they are required. This is a silent behind the scenes process that should ensure that the GPU does not get filled up.
+ *      // Handy for mobile devices! This property only affects WebGL.
+ *      PIXI.GC_MODES
+ *          .ENV.AUTO                           // number // Garbage collection will happen periodically automatically
+ *          .ENV.MANUAL                         // number // Garbage collection will need to be called manually
+ * 
+ *
  *      PIXI.GC_MODES               //
  *      PIXI.loader                 //
  *      PIXI.MIPMAP_TEXTURES        //

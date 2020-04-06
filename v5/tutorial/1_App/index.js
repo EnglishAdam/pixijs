@@ -23,6 +23,10 @@ const app = new PIXI.Application({
 document.body.appendChild(app.view);
 
 /**
+ * -- DESCRIPTION
+ *    Convenience class to create a new PIXI application.
+ *    This class automatically creates the renderer, ticker and root container.
+ * 
  * -- USES
  *      PIXI.Application({options})
  *      const app = new PIXI.Application({options})
