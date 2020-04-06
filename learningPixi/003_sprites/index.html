@@ -32,7 +32,32 @@
     app.renderer.autoResize = true;
     app.renderer.resize(window.innerWidth, window.innerHeight);
 
+
+    // Sprites & Textures
+    /**
+      * SPRITES
+      * From  single image file
+      * From a sub-image on a tileset
+      * Fro a texture atlast (JSON file)
+      *
+      * TEXTURES
+      * Use name of file location
+      */
+    let texture = PIXI.utils.TextureCache["./images/red_square.png"]; // Create texture
+    let sprite = new PIXI.Sprite(texture); // Create sprite with texture set
+    sprite.width = 64
+    sprite.height = 64
+
+    
     // Create stage
+    /**
+      * Conainer of all visible components
+      * App.stage is root container
+      * Anything inside of stage is rendered to canvas
+      * It is a type of container PIXI.Container
+      * For stage, width and heigth describe area occupied
+      */
+      app.stage.addChild(sprite);
 
     // Attach to canvas
     document.body.appendChild(app.view);
